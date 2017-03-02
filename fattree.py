@@ -9,6 +9,8 @@ from mininet.topo import Topo
 from mininet.util import dumpNodeConnections
 import logging
 import os
+from time import sleep
+import random
 
 logging.basicConfig(filename='./fattree.log', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -45,10 +47,8 @@ class Fattree(Topo):
 
     def _addSwitch(self, number, level, switch_list):
         for x in xrange(1, number+1):
-            PREFIX = str(level) + "00"
-            if x >= int(10):
-                PREFIX = str(level) + "0"
-            switch_list.append(self.addSwitch('s' + PREFIX + str(x)))
+            PREFIX = str(level)
+            switch_list.append(self.addSwitch('s' + PREFIX + str(x), dpid=str(level)+str(x).zfill(15)))
 
     def createCoreLayerSwitch(self, NUMBER):
         logger.debug("Create Core Layer")
@@ -65,17 +65,13 @@ class Fattree(Topo):
     def createHost(self, NUMBER):
         logger.debug("Create Host")
         for x in xrange(1, NUMBER+1):
-            PREFIX = "h00"
-            if x >= int(10):
-                PREFIX = "h0"
-            elif x >= int(100):
-                PREFIX = "h"
-            self.HostList.append(self.addHost(PREFIX + str(x)))
+            PREFIX = "h"
+            self.HostList.append(self.addHost(PREFIX + str(x), ip=("10."+str((x-1)/self.pod+1)+"."+str(((x-1)%self.pod)/(self.pod/2)+1)+"."+str((x-1)%(self.pod/2)+1))))
 
     """
     Add Link
     """
-    def createLink(self, bw_c2a=0.2, bw_a2e=0.1, bw_h2a=0.5):
+    def createLink(self, bw_c2a=1, bw_a2e=1, bw_h2a=1):
         logger.debug("Add link Core to Agg.")
         end = self.pod/2
         for x in xrange(0, self.iAggLayerSwitch, end):
@@ -136,7 +132,7 @@ def pingTest(net):
     net.pingAll()
 
 
-def createTopo(pod, density, ip="127.0.0.1", port=6633, bw_c2a=0.2, bw_a2e=0.1, bw_h2a=0.05):
+def createTopo(pod, density, ip="127.0.0.1", port=6633, bw_c2a=1, bw_a2e=1, bw_h2a=1):
     logging.debug("LV1 Create Fattree")
     topo = Fattree(pod, density)
     topo.createTopo()
@@ -163,12 +159,56 @@ def createTopo(pod, density, ip="127.0.0.1", port=6633, bw_c2a=0.2, bw_a2e=0.1, 
     #pingTest(net)
     #iperfTest(net, topo)
 
+    """
+    h7 = net.getNodeByName("h7")
+    h1 = net.getNodeByName("h1")
+    h3 = net.getNodeByName("h3")
+    h5 = net.getNodeByName("h5")
+    h9 = net.getNodeByName("h9")
+    h11 = net.getNodeByName("h11")
+    h13 = net.getNodeByName("h13")
+    h15 = net.getNodeByName("h15")
+    h7.cmd("iperf -s > log7&")
+    h11.cmd("iperf -s > log11&")
+    h13.cmd("iperf -s > log13&")
+    h15.cmd("iperf -s > log15&")
+    h1.cmd("iperf -c 10.2.2.1 -t 100 &")
+    h3.cmd("iperf -c 10.3.2.1 -t 100 &")
+    h5.cmd("iperf -c 10.4.1.1 -t 100 &")
+    h9.cmd("iperf -c 10.4.2.1 -t 100 ")
+    print "go"
+    sleep(10)
+    """
+    startServer(net,topo, 16)
+    startClient(net,topo,16)
+
     CLI(net)
     net.stop()
+
+def startServer(net,topo, serverNum):
+    for i, each in enumerate(topo.HostList) :
+        host = net.getNodeByName(each)
+        command = 'iperf -s -i 20 > log/log{} &'.format(i+1)
+        host.cmd(command)
+
+def startClient(net, topo, clientNum):
+    fh = open("flow", "r")
+
+    for line in fh:
+        client, server = line.split(' ')
+        client = int(client)
+        server = int(server)
+        print client+1, server+1
+        client = topo.HostList[client]
+        client = net.getNodeByName(client)
+        server = topo.HostList[server]
+        serverIP = net.getNodeByName(server).IP()
+        command = 'iperf -c {} -t 100&'.format(serverIP)
+        client.cmd(command)
 
 if __name__ == '__main__':
     setLogLevel('info')
     if os.getuid() != 0:
         logger.debug("You are NOT root")
     elif os.getuid() == 0:
-        createTopo(8, 4)
+        createTopo(4, 2)

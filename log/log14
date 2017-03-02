@@ -1,0 +1,33 @@
+------------------------------------------------------------
+Server listening on TCP port 5001
+TCP window size: 85.3 KByte (default)
+------------------------------------------------------------
+[  4] local 10.4.1.2 port 5001 connected with 10.4.2.2 port 47990
+[  5] local 10.4.1.2 port 5001 connected with 10.2.2.2 port 54130
+[ ID] Interval       Transfer     Bandwidth
+[  4]  0.0-20.0 sec  2.83 KBytes  1.16 Kbits/sec
+[  5]  0.0-20.0 sec  8.48 KBytes  3.48 Kbits/sec
+[  4] 20.0-40.0 sec  39.6 KBytes  16.2 Kbits/sec
+[  5] 20.0-40.0 sec   738 KBytes   302 Kbits/sec
+[  5] 40.0-60.0 sec  2.01 MBytes   843 Kbits/sec
+[  4] 40.0-60.0 sec   189 KBytes  77.6 Kbits/sec
+[  4] 60.0-80.0 sec  0.00 Bytes  0.00 bits/sec
+[  5] 60.0-80.0 sec  2.03 MBytes   851 Kbits/sec
+[  5] 80.0-100.0 sec  2.07 MBytes   869 Kbits/sec
+[  4] 80.0-100.0 sec  1.41 KBytes   579 bits/sec
+[  4] 100.0-120.0 sec  0.00 Bytes  0.00 bits/sec
+[  5] 100.0-120.0 sec  2.11 MBytes   884 Kbits/sec
+[  5]  0.0-124.0 sec  9.38 MBytes   634 Kbits/sec
+[  4] 120.0-140.0 sec  5.66 KBytes  2.32 Kbits/sec
+[  4] 140.0-160.0 sec  5.66 KBytes  2.32 Kbits/sec
+[  4] 160.0-180.0 sec  0.00 Bytes  0.00 bits/sec
+[  4] 180.0-200.0 sec  8.48 KBytes  3.48 Kbits/sec
+[  4] 200.0-220.0 sec  1.41 KBytes   579 bits/sec
+[  4] 220.0-240.0 sec  18.4 KBytes  7.53 Kbits/sec
+[  4] 240.0-260.0 sec  2.83 KBytes  1.16 Kbits/sec
+[  4] 260.0-280.0 sec  4.24 KBytes  1.74 Kbits/sec
+[  4] 280.0-300.0 sec  31.1 KBytes  12.7 Kbits/sec
+[  4] 300.0-320.0 sec  0.00 Bytes  0.00 bits/sec
+[  4] 320.0-340.0 sec  0.00 Bytes  0.00 bits/sec
+[  4] 340.0-360.0 sec  0.00 Bytes  0.00 bits/sec
+[  4] 360.0-380.0 sec   100 KBytes  41.1 Kbits/sec
