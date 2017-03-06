@@ -132,7 +132,7 @@ def pingTest(net):
     net.pingAll()
 
 
-def createTopo(pod, density, ip="127.0.0.1", port=6633, bw_c2a=1, bw_a2e=1, bw_h2a=1):
+def createTopo(pod, density, ip="192.168.33.101", port=6623, bw_c2a=1, bw_a2e=1, bw_h2a=1):
     logging.debug("LV1 Create Fattree")
     topo = Fattree(pod, density)
     topo.createTopo()
@@ -156,7 +156,7 @@ def createTopo(pod, density, ip="127.0.0.1", port=6633, bw_c2a=1, bw_a2e=1, bw_h
     logger.debug("LV1 dumpNode")
 
     #dumpNodeConnections(net.hosts)
-    #pingTest(net)
+    pingTest(net)
     #iperfTest(net, topo)
 
     """
@@ -180,7 +180,8 @@ def createTopo(pod, density, ip="127.0.0.1", port=6633, bw_c2a=1, bw_a2e=1, bw_h
     sleep(10)
     """
     startServer(net,topo, 16)
-    startClient(net,topo,16)
+    _ = raw_input()
+    startClient(net,topo,6)
 
     CLI(net)
     net.stop()
@@ -188,7 +189,7 @@ def createTopo(pod, density, ip="127.0.0.1", port=6633, bw_c2a=1, bw_a2e=1, bw_h
 def startServer(net,topo, serverNum):
     for i, each in enumerate(topo.HostList) :
         host = net.getNodeByName(each)
-        command = 'iperf -s -i 20 > log/log{} &'.format(i+1)
+        command = 'iperf -s -i 1 > log/log{} &'.format(i+1)
         host.cmd(command)
 
 def startClient(net, topo, clientNum):
@@ -203,8 +204,9 @@ def startClient(net, topo, clientNum):
         client = net.getNodeByName(client)
         server = topo.HostList[server]
         serverIP = net.getNodeByName(server).IP()
-        command = 'iperf -c {} -t 100&'.format(serverIP)
+        command = 'iperf -c {} -t 100 > clientLog/log{}&'.format(serverIP, serverIP)
         client.cmd(command)
+        sleep(0.1)
 
 if __name__ == '__main__':
     setLogLevel('info')
