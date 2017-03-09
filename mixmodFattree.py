@@ -194,16 +194,17 @@ def createTopo(pod, density, ip="192.168.33.101", port=6623, bw_c2a=1, bw_a2e=1,
     sleep(10)
     """
     startServer(net,topo, 16)
-    _ = raw_input()
+    sleep(10)
+    print 'start'
     startClient(net,topo,6)
+    sleep(100)
 
-    CLI(net)
     net.stop()
 
 def startServer(net,topo, serverNum):
     for i, each in enumerate(topo.HostList) :
         host = net.getNodeByName(each)
-        command = 'iperf -s -i 1 > ./mixmodLog/log{} &'.format(i+1)
+        command = 'iperf -s -i 1 > /home/security/fattree/log/mixLog/hedera/10/log{} &'.format(i+1)
         host.cmd(command)
 
 def startClient(net, topo, clientNum):
