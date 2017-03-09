@@ -159,37 +159,20 @@ def createTopo(pod, density, ip="192.168.33.101", port=6623, bw_c2a=1, bw_a2e=1,
     pingTest(net)
     #iperfTest(net, topo)
 
-    """
-    h7 = net.getNodeByName("h7")
-    h1 = net.getNodeByName("h1")
-    h3 = net.getNodeByName("h3")
-    h5 = net.getNodeByName("h5")
-    h9 = net.getNodeByName("h9")
-    h11 = net.getNodeByName("h11")
-    h13 = net.getNodeByName("h13")
-    h15 = net.getNodeByName("h15")
-    h7.cmd("iperf -s > log7&")
-    h11.cmd("iperf -s > log11&")
-    h13.cmd("iperf -s > log13&")
-    h15.cmd("iperf -s > log15&")
-    h1.cmd("iperf -c 10.2.2.1 -t 100 &")
-    h3.cmd("iperf -c 10.3.2.1 -t 100 &")
-    h5.cmd("iperf -c 10.4.1.1 -t 100 &")
-    h9.cmd("iperf -c 10.4.2.1 -t 100 ")
-    print "go"
-    sleep(10)
-    """
     startServer(net,topo, 16)
-    _ = raw_input()
+    print 'start'
+    sleep(11)
     startClient(net,topo,6)
+    print 'sleep'
+    sleep(100)
+    print 'over'
 
-    CLI(net)
     net.stop()
 
 def startServer(net,topo, serverNum):
     for i, each in enumerate(topo.HostList) :
         host = net.getNodeByName(each)
-        command = 'iperf -s -i 1 > log/log{} &'.format(i+1)
+        command = 'iperf -s -i 1 > ./log/oneMininetLog/hedera/10/log{} &'.format(i+1)
         host.cmd(command)
 
 def startClient(net, topo, clientNum):
@@ -204,7 +187,7 @@ def startClient(net, topo, clientNum):
         client = net.getNodeByName(client)
         server = topo.HostList[server]
         serverIP = net.getNodeByName(server).IP()
-        command = 'iperf -c {} -t 100 > clientLog/log{}&'.format(serverIP, serverIP)
+        command = 'iperf -c {} -t 100 &'.format(serverIP, serverIP)
         client.cmd(command)
         sleep(0.1)
 
